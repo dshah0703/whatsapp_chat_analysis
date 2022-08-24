@@ -3,6 +3,8 @@ from collections import Counter
 import pandas as pd
 from wordcloud import WordCloud
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import nltk
+nltk.download('vader_lexicon')
 import streamlit as st
 #import emoji
 extract = URLExtract()
