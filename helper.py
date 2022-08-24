@@ -123,14 +123,9 @@ def activity_heatmap(selected_user,df):
 def sentiment_analysis(selected_user,df):
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
-
-
-
-
     sent = SentimentIntensityAnalyzer()
     df['scores'] = df['message'].apply(lambda message: sent.polarity_scores(message))
     df['compound'] = df['scores'].apply(lambda score_dict: score_dict['compound'])
-    df['sentiment_type'] = ''
     df.loc[df.compound > 0, 'sentiment_type'] = 'Positive'
     df.loc[df.compound == 0, 'sentiment_type'] = 'Neutral'
     df.loc[df.compound < 0, 'sentiment_type'] = 'Negative'
