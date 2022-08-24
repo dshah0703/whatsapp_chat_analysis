@@ -2,6 +2,8 @@ from urlextract import URLExtract
 from collections import Counter
 import pandas as pd
 from wordcloud import WordCloud
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import streamlit as st
 #import emoji
 extract = URLExtract()
 
@@ -117,3 +119,26 @@ def activity_heatmap(selected_user,df):
     user_heatmap = df.pivot_table(index='day_name', columns='period', values='message', aggfunc='count').fillna(0)
 
     return user_heatmap
+
+def sentiment_analysis(selected_user,df):
+    if selected_user != 'Overall':
+        df = df[df['user'] == selected_user]
+
+
+
+
+    sent = SentimentIntensityAnalyzer()
+    df['scores'] = df['message'].apply(lambda message: sent.polarity_scores(message))
+    df['compound'] = df['scores'].apply(lambda score_dict: score_dict['compound'])
+    df['sentiment_type'] = ''
+    df.loc[df.compound > 0, 'sentiment_type'] = 'Positive'
+    df.loc[df.compound == 0, 'sentiment_type'] = 'Neutral'
+    df.loc[df.compound < 0, 'sentiment_type'] = 'Negative'
+
+    result = df['sentiment_type'].value_counts().index[0]
+    return result
+
+
+
+
+
